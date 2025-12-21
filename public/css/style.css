@@ -1,0 +1,191 @@
+/* =====================================
+   RESET & ROOT
+===================================== */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+:root {
+  --bg-main: #0b0d13;
+  --bg-card: rgba(20, 24, 36, 0.9);
+  --border: #252a33;
+  --text-main: #f1f4f8;
+  --text-muted: #9aa4b5;
+  --accent: #ff4757;
+}
+
+/* =====================================
+   BODY (ALL DEVICES)
+===================================== */
+body {
+  min-height: 100vh;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  background: radial-gradient(circle at top, #1b1f2a, var(--bg-main));
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 16px; /* 🔑 mobile safe padding */
+  color: var(--text-main);
+}
+
+/* =====================================
+   LOGIN CONTAINER
+===================================== */
+.login-container {
+  width: 100%;
+  max-width: 420px;
+  background: var(--bg-card);
+  backdrop-filter: blur(14px);
+  padding: 40px 36px;
+  border-radius: 18px;
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  box-shadow:
+    0 25px 60px rgba(0, 0, 0, 0.6),
+    inset 0 0 0 1px rgba(255, 255, 255, 0.03);
+  animation: fadeUp 0.6s ease forwards;
+}
+
+/* =====================================
+   HEADINGS
+===================================== */
+.login-container h1 {
+  text-align: center;
+  font-size: clamp(22px, 4vw, 28px); /* 🔑 responsive font */
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  margin-bottom: 8px;
+}
+
+.subtitle {
+  text-align: center;
+  font-size: clamp(13px, 2.8vw, 14px);
+  color: var(--text-muted);
+  margin-bottom: 28px;
+}
+
+/* =====================================
+   INPUT GROUP
+===================================== */
+.input-group {
+  margin-bottom: 20px;
+}
+
+.input-group label {
+  display: block;
+  font-size: 13px;
+  font-weight: 600;
+  color: #cfd6e4;
+  margin-bottom: 6px;
+}
+
+.input-group input {
+  width: 100%;
+  padding: 14px 14px;
+  border-radius: 10px;
+  border: 1px solid var(--border);
+  background: #0f121a;
+  color: var(--text-main);
+  font-size: 14px;
+  outline: none;
+  transition: all 0.25s ease;
+}
+
+.input-group input::placeholder {
+  color: #6f7887;
+}
+
+.input-group input:focus {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 2px rgba(255, 71, 87, 0.25);
+  background: #0c0f16;
+}
+
+/* =====================================
+   LOGIN BUTTON
+===================================== */
+button {
+  width: 100%;
+  padding: clamp(12px, 3vw, 14px);
+  margin-top: 10px;
+  border-radius: 14px;
+  border: none;
+  cursor: pointer;
+
+  background: linear-gradient(
+    135deg,
+    #ff2f45,
+    #ff5f73,
+    #ff2f45
+  );
+  background-size: 200% 200%;
+
+  color: #000;
+  font-size: clamp(14px, 3vw, 15px);
+  font-weight: 800;
+  letter-spacing: 0.6px;
+  text-transform: uppercase;
+
+  transition: all 0.3s ease;
+  animation: gradientFlow 5s ease infinite;
+}
+
+button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 14px 35px rgba(255, 71, 87, 0.45);
+}
+
+button:active {
+  transform: translateY(0);
+  box-shadow: none;
+}
+
+/* =====================================
+   ANIMATIONS
+===================================== */
+@keyframes fadeUp {
+  from {
+    opacity: 0;
+    transform: translateY(25px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes gradientFlow {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+/* =====================================
+   SMALL MOBILE ( <360px )
+===================================== */
+@media (max-width: 360px) {
+  .login-container {
+    padding: 26px 20px;
+  }
+}
+
+/* =====================================
+   TABLET ( 600px – 900px )
+===================================== */
+@media (min-width: 600px) and (max-width: 900px) {
+  .login-container {
+    max-width: 460px;
+    padding: 42px;
+  }
+}
+
+/* =====================================
+   LAPTOP & DESKTOP ( >1200px )
+===================================== */
+@media (min-width: 1200px) {
+  .login-container {
+    max-width: 480px;
+    padding: 46px;
+  }
+}

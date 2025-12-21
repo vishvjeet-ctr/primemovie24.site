@@ -1,10 +1,33 @@
 const express = require('express');
 const router = express.Router();
 const Movie = require('../models/Movie');
-const { ensureAdmin } = require('../middleware/auth');
+
+// Middleware to check if user is logged in
+function requireAuth(req, res, next) {
+  if (req.session && req.session.admin) {
+    return next();
+  } else {
+    return res.redirect('/admin/login');
+  }
+}
+
+// Login page
+router.get('/login', (req, res) => {
+  if (req.session.admin) {
+    return res.redirect('/admin');
+  }
+  res.render('login');
+});
+
+
+// Logout
+router.get('/logout', (req, res) => {
+  req.session.destroy();
+  res.redirect('/admin/login');
+});
 
 // Admin Dashboard
-router.get('/', ensureAdmin, async (req, res) => {
+router.get('/', requireAuth, async (req, res) => {
   try {
     const totalMovies = await Movie.countDocuments();
     const trendingCount = await Movie.countDocuments({ category: 'trending' });
@@ -31,7 +54,7 @@ router.get('/', ensureAdmin, async (req, res) => {
 });
 
 // Add Movie Page
-router.get('/add', ensureAdmin, (req, res) => {
+router.get('/add', requireAuth, (req, res) => {
   res.render('admin/add-movie', {
     title: 'Add New Movie',
     page: 'add'
@@ -39,7 +62,7 @@ router.get('/add', ensureAdmin, (req, res) => {
 });
 
 // Create Movie
-router.post('/add', ensureAdmin, async (req, res) => {
+router.post('/add', requireAuth, async (req, res) => {
   try {
     const { title, poster, downloadLink, category, rating } = req.body;
     
@@ -74,7 +97,7 @@ router.post('/add', ensureAdmin, async (req, res) => {
 });
 
 // All Movies Page
-router.get('/movies', ensureAdmin, async (req, res) => {
+router.get('/movies', requireAuth, async (req, res) => {
   try {
     const movies = await Movie.find().sort({ createdAt: -1 });
     res.render('admin/all-movies', {
@@ -89,7 +112,7 @@ router.get('/movies', ensureAdmin, async (req, res) => {
 });
 
 // Edit Movie Page
-router.get('/movies/:id/edit', ensureAdmin, async (req, res) => {
+router.get('/movies/:id/edit', requireAuth, async (req, res) => {
   try {
     const movie = await Movie.findById(req.params.id);
     
@@ -109,7 +132,7 @@ router.get('/movies/:id/edit', ensureAdmin, async (req, res) => {
 });
 
 // Update Movie
-router.put('/movies/:id', ensureAdmin, async (req, res) => {
+router.put('/movies/:id', requireAuth, async (req, res) => {
   try {
     const { title, poster, downloadLink, category, rating } = req.body;
     
@@ -129,7 +152,7 @@ router.put('/movies/:id', ensureAdmin, async (req, res) => {
 });
 
 // Delete Movie
-router.delete('/movies/:id', ensureAdmin, async (req, res) => {
+router.delete('/movies/:id', requireAuth, async (req, res) => {
   try {
     await Movie.findByIdAndDelete(req.params.id);
     res.redirect('/admin/movies');
@@ -140,3 +163,4 @@ router.delete('/movies/:id', ensureAdmin, async (req, res) => {
 });
 
 module.exports = router;
+

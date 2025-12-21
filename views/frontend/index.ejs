@@ -1,0 +1,126 @@
+<%- include('../partials/header') %>
+
+<main class="main-content">
+    <!-- Trending Movies Section -->
+    <section class="movie-section trending-section">
+        <h2 class="section-title">Trending Movies</h2>
+        <div class="trending-container">
+            <% if (trendingMovies.length > 0) { %>
+                <% trendingMovies.forEach((movie, index) => { %>
+                    <div class="trending-movie-card">
+                        <div class="trending-rank-number"><%= index + 1 %></div>
+                        <a href="/movie/<%= movie._id %>" class="trending-movie-link">
+                            <div class="trending-poster-wrapper">
+                                <img src="<%= movie.poster %>" alt="<%= movie.title %>" class="trending-poster">
+                            </div>
+                            <div class="trending-movie-info">
+                                <h3 class="trending-movie-title"><%= movie.title %></h3>
+                            </div>
+                        </a>
+                    </div>
+                <% }); %>
+            <% } else { %>
+                <p class="no-movies">No trending movies available</p>
+            <% } %>
+        </div>
+    </section>
+
+    <!-- Bollywood Movies Section -->
+    <section class="movie-section">
+        <h2 class="section-title">Bollywood Movies</h2>
+        <div class="movies-grid" data-category="bollywood">
+            <% if (bollywoodMovies.length > 0) { %>
+                <% bollywoodMovies.forEach(movie => { %>
+                    <div class="movie-card">
+                        <a href="/movie/<%= movie._id %>" class="movie-link">
+                            <img src="<%= movie.poster %>" alt="<%= movie.title %>" class="movie-poster">
+                        </a>
+                        <h3 class="movie-title-below"><%= movie.title %></h3>
+                    </div>
+                <% }); %>
+            <% } else { %>
+                <p class="no-movies">No Bollywood movies available</p>
+            <% } %>
+        </div>
+    </section>
+
+    <!-- Hollywood Movies Section -->
+    <section class="movie-section">
+        <h2 class="section-title">Hollywood Movies</h2>
+        <div class="movies-grid" data-category="hollywood">
+            <% if (hollywoodMovies.length > 0) { %>
+                <% hollywoodMovies.forEach(movie => { %>
+                    <div class="movie-card">
+                        <a href="/movie/<%= movie._id %>" class="movie-link">
+                            <img src="<%= movie.poster %>" alt="<%= movie.title %>" class="movie-poster">
+                        </a>
+                        <h3 class="movie-title-below"><%= movie.title %></h3>
+                    </div>
+                <% }); %>
+            <% } else { %>
+                <p class="no-movies">No Hollywood movies available</p>
+            <% } %>
+        </div>
+    </section>
+
+    <!-- Marvel Movies Section -->
+    <section class="movie-section">
+        <h2 class="section-title">Marvel Movies</h2>
+        <div class="movies-grid" data-category="marvel">
+            <% if (marvelMovies.length > 0) { %>
+                <% marvelMovies.forEach(movie => { %>
+                    <div class="movie-card">
+                        <a href="/movie/<%= movie._id %>" class="movie-link">
+                            <img src="<%= movie.poster %>" alt="<%= movie.title %>" class="movie-poster">
+                        </a>
+                        <h3 class="movie-title-below"><%= movie.title %></h3>
+                    </div>
+                <% }); %>
+            <% } else { %>
+                <p class="no-movies">No Marvel movies available</p>
+            <% } %>
+        </div>
+    </section>
+
+    <!-- DC Movies Section -->
+    <section class="movie-section">
+        <h2 class="section-title">DC Movies</h2>
+        <div class="movies-grid" data-category="dc">
+            <% if (dcMovies.length > 0) { %>
+                <% dcMovies.forEach(movie => { %>
+                    <div class="movie-card">
+                        <a href="/movie/<%= movie._id %>" class="movie-link">
+                            <img src="<%= movie.poster %>" alt="<%= movie.title %>" class="movie-poster">
+                        </a>
+                        <h3 class="movie-title-below"><%= movie.title %></h3>
+                    </div>
+                <% }); %>
+            <% } else { %>
+                <p class="no-movies">No DC movies available</p>
+            <% } %>
+        </div>
+    </section>
+
+    <!-- South Indian Movies Section -->
+    <section class="movie-section">
+        <h2 class="section-title">South Indian Movies</h2>
+        <div class="movies-grid" data-category="south">
+            <% if (southMovies.length > 0) { %>
+                <% southMovies.forEach(movie => { %>
+                    <div class="movie-card">
+                        <a href="/movie/<%= movie._id %>" class="movie-link">
+                            <img src="<%= movie.poster %>" alt="<%= movie.title %>" class="movie-poster">
+                        </a>
+                        <h3 class="movie-title-below"><%= movie.title %></h3>
+                    </div>
+                <% }); %>
+            <% } else { %>
+                <p class="no-movies">No South Indian movies available</p>
+            <% } %>
+        </div>
+    </section>
+</main>
+
+<%- include('../partials/footer') %>
+
+

@@ -1,0 +1,35 @@
+<% 
+    let body = '';
+    body += '<div class="dashboard-header">';
+    body += '<h1>Dashboard</h1>';
+    body += '<p class="dashboard-subtitle">Welcome to PrimeMovie24 Admin Panel</p>';
+    body += '</div>';
+    body += '<div class="stats-grid">';
+    body += '<div class="stat-card"><div class="stat-icon">🎬</div>';
+    body += '<div class="stat-info"><h3 class="stat-value">' + totalMovies + '</h3>';
+    body += '<p class="stat-label">Total Movies</p></div></div>';
+    body += '<div class="stat-card"><div class="stat-icon">🔥</div>';
+    body += '<div class="stat-info"><h3 class="stat-value">' + trendingCount + '</h3>';
+    body += '<p class="stat-label">Trending Movies</p></div></div>';
+    body += '<div class="stat-card"><div class="stat-icon">🎭</div>';
+    body += '<div class="stat-info"><h3 class="stat-value">' + categoryCounts.bollywood + '</h3>';
+    body += '<p class="stat-label">Bollywood</p></div></div>';
+    body += '<div class="stat-card"><div class="stat-icon">🎪</div>';
+    body += '<div class="stat-info"><h3 class="stat-value">' + categoryCounts.hollywood + '</h3>';
+    body += '<p class="stat-label">Hollywood</p></div></div>';
+    body += '<div class="stat-card"><div class="stat-icon">🦸</div>';
+    body += '<div class="stat-info"><h3 class="stat-value">' + categoryCounts.marvel + '</h3>';
+    body += '<p class="stat-label">Marvel</p></div></div>';
+    body += '<div class="stat-card"><div class="stat-icon">🦇</div>';
+    body += '<div class="stat-info"><h3 class="stat-value">' + categoryCounts.dc + '</h3>';
+    body += '<p class="stat-label">DC</p></div></div>';
+    body += '<div class="stat-card"><div class="stat-icon">🎯</div>';
+    body += '<div class="stat-info"><h3 class="stat-value">' + categoryCounts.south + '</h3>';
+    body += '<p class="stat-label">South Indian</p></div></div>';
+    body += '</div>';
+    body += '<div class="dashboard-actions">';
+    body += '<a href="/admin/add" class="action-btn primary">Add New Movie</a>';
+    body += '<a href="/admin/movies" class="action-btn secondary">View All Movies</a>';
+    body += '</div>';
+%>
+<%- include('layout', { body: body, page: 'dashboard' }) %>

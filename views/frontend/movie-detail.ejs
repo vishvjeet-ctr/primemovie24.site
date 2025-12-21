@@ -1,0 +1,28 @@
+<%- include('../partials/header') %>
+
+<main class="main-content">
+    <div class="movie-detail-container">
+        <div class="movie-detail-poster">
+            <img src="<%= movie.poster %>" alt="<%= movie.title %>" class="detail-poster-img">
+        </div>
+        <div class="movie-detail-info">
+            <h1 class="detail-title"><%= movie.title %></h1>
+            <div class="detail-meta">
+                <span class="detail-category"><%= movie.category.charAt(0).toUpperCase() + movie.category.slice(1) %></span>
+                <% if (movie.rating > 0) { %>
+                    <span class="detail-rating">⭐ <%= movie.rating %>/10</span>
+                <% } %>
+            </div>
+            <div class="detail-actions">
+                <a href="<%= movie.downloadLink %>" target="_blank" class="download-btn">
+                    Download Movie
+                </a>
+                <a href="/" class="back-btn">Back to Home</a>
+            </div>
+        </div>
+    </div>
+</main>
+
+<%- include('../partials/footer') %>
+
+

@@ -23,13 +23,11 @@ app.get('/admin/login', (req, res) => {
 
 // Middleware
 app.set('view engine', 'ejs');
-app.set('views', path.join(__dirname, 'primemovie2412/views'));
-app.use(express.static(path.join(__dirname, 'primemovie2412/public')));
+app.set('views', path.join(__dirname, 'views'));
+app.use(express.static(path.join(__dirname, 'public')));
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 app.use(methodOverride('_method'));
-
-
 
 
 // Session middleware
@@ -56,6 +54,7 @@ app.post('/admin', async (req, res) => {
       });
     }
     
+    req.session.admin = true;
     req.session.userId = user._id;
     res.redirect('/admin');
   } catch (error) {
@@ -91,6 +90,6 @@ app.listen(PORT, () => {
   console.log(`🚀 Server running on http://localhost:${PORT}`);
 }); 
             
-
+  
 
  

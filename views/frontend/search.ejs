@@ -1,0 +1,44 @@
+<%- include('../partials/header') %>
+
+<main class="main-content">
+    <section class="movie-section">
+        <h2 class="section-title">
+            Search Results<% if (searchQuery) { %>: "<%= searchQuery %>"<% } %>
+            <% if (typeof resultCount !== 'undefined') { %>
+                <span class="result-count">(<%= resultCount %> results)</span>
+            <% } %>
+        </h2>
+        <% if (movies.length > 0) { %>
+            <div class="movies-grid search-results">
+                <% movies.forEach(movie => { %>
+                    <div class="movie-card">
+                        <a href="/movie/<%= movie._id %>" class="movie-link">
+                            <img src="<%= movie.poster %>" alt="<%= movie.title %>" class="movie-poster">
+                        </a>
+                        <h3 class="movie-title-below"><%= movie.title %></h3>
+                        <div class="movie-category"><%= movie.category %></div>
+                    </div>
+                <% }); %>
+            </div>
+        <% } else { %>
+            <div class="no-results">
+                <p>No movies found matching "<%= searchQuery %>"</p>
+                <div class="search-suggestions">
+                    <p>Try searching for:</p>
+                    <ul>
+                        <li>Movie titles (e.g., "Avengers", "Dhoom", "Iron Man")</li>
+                        <li>Categories (e.g., "bollywood", "marvel", "trending")</li>
+                        <li>Partial names (e.g., "spider" for Spider-Man)</li>
+                        <li>Without spaces (e.g., "ironman" for "Iron Man")</li>
+                        <li>Any case (e.g., "IRONMAN", "ironman", "IronMan")</li>
+                    </ul>
+                </div>
+                <a href="/" class="back-link">← Back to Home</a>
+            </div>
+        <% } %>
+    </section>
+</main>
+
+<%- include('../partials/footer') %>
+
+

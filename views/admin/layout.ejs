@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><%= typeof title !== 'undefined' ? title : 'Admin Panel' %> - PrimeMovie24</title>
+    <link rel="stylesheet" href="/css/admin.css">
+    <script src="/js/admin.js" defer></script>
+</head>
+<body>
+    <div class="admin-wrapper">
+        <!-- Mobile Sidebar Toggle -->
+        <button id="sidebar-toggle" class="sidebar-toggle" aria-label="Toggle sidebar">
+            <span class="hamburger-line"></span>
+            <span class="hamburger-line"></span>
+            <span class="hamburger-line"></span>
+        </button>
+        <!-- Sidebar -->
+        <aside class="admin-sidebar">
+            <div class="sidebar-header">
+                <h2>PrimeMovie24</h2>
+                <p class="admin-label">Admin Panel</p>
+            </div>
+            <nav class="sidebar-nav">
+                <a href="/admin" class="nav-item <%= typeof page !== 'undefined' && page === 'dashboard' ? 'active' : '' %>">
+                    <span class="nav-icon">📊</span>
+                    <span class="nav-text">Dashboard</span>
+                </a>
+                <a href="/admin/add" class="nav-item <%= typeof page !== 'undefined' && page === 'add' ? 'active' : '' %>">
+                    <span class="nav-icon">➕</span>
+                    <span class="nav-text">Add Movie</span>
+                </a>
+                <a href="/admin/movies" class="nav-item <%= typeof page !== 'undefined' && page === 'movies' ? 'active' : '' %>">
+                    <span class="nav-icon">🎬</span>
+                    <span class="nav-text">All Movies</span>
+                </a>
+                <a href="/" class="nav-item">
+                    <span class="nav-icon">🏠</span>
+                    <span class="nav-text">View Site</span>
+                </a>
+                <a href="/admin/logout" class="nav-item">
+                    <span class="nav-icon">🚪</span>
+                    <span class="nav-text">Logout</span>
+                </a>
+            </nav>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="admin-main">
+            <div class="admin-content">
+                <%- typeof body !== 'undefined' ? body : '' %>
+            </div>
+        </main>
+    </div>
+</body>
+</html>

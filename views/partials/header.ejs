@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><%= typeof title !== 'undefined' ? title : 'PrimeMovie24' %></title>
+    <link rel="stylesheet" href="/css/frontend.css">
+</head>
+<body>
+    <header class="main-header">
+        <div class="header-container">
+            <div class="logo">
+                <a href="/">
+                    <img src="/image/vishvjeet.jpg" alt="PrimeMovie24 Logo">
+                </a>
+            </div>
+            <div class="search-container">
+                <form action="/" method="GET" class="search-form">
+                    <input 
+                        type="text" 
+                        name="search" 
+                        placeholder="Search movies..." 
+                        class="search-input"
+                        value="<%= typeof searchQuery !== 'undefined' ? searchQuery : '' %>"
+                    >
+                    <button type="submit" class="search-btn">Search</button>
+                </form>
+            </div>
+        </div>
+    </header>
+
+
