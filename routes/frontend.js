@@ -28,36 +28,14 @@ router.get('/', async (req, res) => {
           // Normalized title match (space-insensitive)
           { normalizedTitle: { $regex: new RegExp(normalizedQuery.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'), 'i') } },
           // Category match
+          { categories: { $regex: new RegExp(searchQuery.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'), 'i') } },
           { category: { $regex: new RegExp(searchQuery.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'), 'i') } },
           // Description matches
           { description: { $regex: new RegExp(searchQuery.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'), 'i') } },
           { description: { $regex: new RegExp(normalizedQuery.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'), 'i') } }
         ]
       })
-      .sort({ 
-        // Prioritize exact title matches first
-        $expr: {
-          $cond: {
-            if: { $eq: [{ $toLower: "$title" }, searchQuery.toLowerCase()] },
-            then: 1,
-            else: {
-              $cond: {
-                if: { $eq: ["$normalizedTitle", normalizedQuery] },
-                then: 2,
-                else: {
-                  $cond: {
-                    if: { $regexMatch: { input: { $toLower: "$title" }, regex: new RegExp(searchQuery.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'), 'i') } },
-                    then: 3,
-                    else: 4
-                  }
-                }
-              }
-            }
-          }
-        },
-        createdAt: -1, // Then by newest
-        rating: -1      // Then by highest rating
-      })
+      .sort({ createdAt: -1, rating: -1 })
       .limit(50);
       
       return res.render('frontend/search', {
@@ -69,28 +47,58 @@ router.get('/', async (req, res) => {
     }
 
     // Get trending movies (latest 10)
-    const trendingMovies = await Movie.find({ category: 'trending' })
+    const trendingMovies = await Movie.find({ 
+      $or: [
+        { categories: 'trending' },
+        { category: 'trending' }
+      ]
+    })
       .sort({ createdAt: -1 })
       .limit(10);
 
     // Get movies by category (15 each)
-    const bollywoodMovies = await Movie.find({ category: 'bollywood' })
+    const bollywoodMovies = await Movie.find({ 
+      $or: [
+        { categories: 'bollywood' },
+        { category: 'bollywood' }
+      ]
+    })
       .sort({ createdAt: -1 })
       .limit(15);
     
-    const hollywoodMovies = await Movie.find({ category: 'hollywood' })
+    const hollywoodMovies = await Movie.find({ 
+      $or: [
+        { categories: 'hollywood' },
+        { category: 'hollywood' }
+      ]
+    })
       .sort({ createdAt: -1 })
       .limit(15);
     
-    const marvelMovies = await Movie.find({ category: 'marvel' })
+    const marvelMovies = await Movie.find({ 
+      $or: [
+        { categories: 'marvel' },
+        { category: 'marvel' }
+      ]
+    })
       .sort({ createdAt: -1 })
       .limit(15);
     
-    const dcMovies = await Movie.find({ category: 'dc' })
+    const dcMovies = await Movie.find({ 
+      $or: [
+        { categories: 'dc' },
+        { category: 'dc' }
+      ]
+    })
       .sort({ createdAt: -1 })
       .limit(15);
     
-    const southMovies = await Movie.find({ category: 'south' })
+    const southMovies = await Movie.find({ 
+      $or: [
+        { categories: 'south' },
+        { category: 'south' }
+      ]
+    })
       .sort({ createdAt: -1 })
       .limit(15);
 

@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#FF4757">
     <title><%= typeof title !== 'undefined' ? title : 'PrimeMovie24' %></title>
     <link rel="stylesheet" href="/css/frontend.css">
 </head>
@@ -16,17 +17,89 @@
             </div>
             <div class="search-container">
                 <form action="/" method="GET" class="search-form">
-                    <input 
-                        type="text" 
-                        name="search" 
-                        placeholder="Search movies..." 
-                        class="search-input"
-                        value="<%= typeof searchQuery !== 'undefined' ? searchQuery : '' %>"
-                    >
+                    <div class="search-input-wrapper">
+                        <input 
+                            type="text" 
+                            name="search" 
+                            placeholder="Search movies..." 
+                            class="search-input"
+                            id="searchInput"
+                            value="<%= typeof searchQuery !== 'undefined' ? searchQuery : '' %>"
+                            autocomplete="off"
+                        >
+                        <div id="searchResults" class="search-results-dropdown" style="display: none !important;"></div>
+                    </div>
                     <button type="submit" class="search-btn">Search</button>
                 </form>
             </div>
         </div>
     </header>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const searchInput = document.getElementById('searchInput');
+            const searchResults = document.getElementById('searchResults');
+            let searchTimeout;
+
+            searchInput.addEventListener('input', function() {
+                const query = this.value.trim();
+                
+                // Clear previous timeout
+                clearTimeout(searchTimeout);
+                
+                if (query.length < 2) {
+                    searchResults.innerHTML = '';
+                    searchResults.style.display = 'none';
+                    return;
+                }
+
+                // Set new timeout for debounce
+                searchTimeout = setTimeout(() => {
+                    fetch(`/?search=${encodeURIComponent(query)}`)
+                        .then(response => response.text())
+                        .then(html => {
+                            // Create a temporary div to parse the response
+                            const tempDiv = document.createElement('div');
+                            tempDiv.innerHTML = html;
+                            
+                            // Find search results in the response
+                            const moviesGrid = tempDiv.querySelector('.search-results');
+                            if (moviesGrid && moviesGrid.children.length > 0) {
+                                searchResults.innerHTML = '';
+                                searchResults.style.display = 'flex';
+                                
+                                // Clone movie cards to search results
+                                Array.from(moviesGrid.children).forEach(movieCard => {
+                                    const clonedCard = movieCard.cloneNode(true);
+                                    searchResults.appendChild(clonedCard);
+                                });
+                            } else {
+                                searchResults.innerHTML = '<div class="no-search-results">No movies found</div>';
+                                searchResults.style.display = 'flex';
+                            }
+                        })
+                        .catch(error => {
+                            console.error('Search error:', error);
+                            searchResults.innerHTML = '';
+                            searchResults.style.display = 'none';
+                        });
+                }, 300); // 300ms debounce
+            });
+
+            // Hide search results when clicking outside
+            document.addEventListener('click', function(e) {
+                if (!searchInput.contains(e.target) && !searchResults.contains(e.target)) {
+                    searchResults.style.display = 'none';
+                }
+            });
+
+            // Show search results when focusing on input
+            searchInput.addEventListener('focus', function() {
+                if (this.value.trim().length >= 2 && searchResults.children.length > 0) {
+                    searchResults.style.display = 'block';
+                }
+            });
+        });
+    </script>
 
 

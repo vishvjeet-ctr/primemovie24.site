@@ -13,12 +13,22 @@
             body += '<tr>';
             body += '<td class="poster-cell"><img src="' + movie.poster + '" alt="' + movie.title + '" class="table-poster"></td>';
             body += '<td class="title-cell">' + movie.title + '</td>';
-            body += '<td class="category-cell"><span class="category-badge category-' + movie.category + '">' + movie.category.charAt(0).toUpperCase() + movie.category.slice(1) + '</span></td>';
+            // Handle categories array
+            let categoryDisplay = '';
+            if (movie.categories && Array.isArray(movie.categories) && movie.categories.length > 0) {
+                categoryDisplay = movie.categories.join(', ');
+            } else if (movie.category) {
+                categoryDisplay = movie.category;
+            } else {
+                categoryDisplay = 'No category';
+            }
+            let firstCategory = categoryDisplay.split(',')[0].toLowerCase().replace(/\s+/g, '');
+            body += '<td class="category-cell"><span class="category-badge category-' + firstCategory + '">' + categoryDisplay.charAt(0).toUpperCase() + categoryDisplay.slice(1) + '</span></td>';
             body += '<td class="rating-cell">' + (movie.rating > 0 ? '⭐ ' + movie.rating : '-') + '</td>';
             body += '<td class="date-cell">' + new Date(movie.createdAt).toLocaleDateString() + '</td>';
             body += '<td class="actions-cell"><a href="/admin/movies/' + movie._id + '/edit" class="btn-edit">Edit</a>';
             body += '<form action="/admin/movies/' + movie._id + '?_method=DELETE" method="POST" class="delete-form" style="display: inline;">';
-            body += '<button type="submit" class="btn-delete" onclick="return confirm(\'Are you sure you want to delete this movie?\')">Delete</button></form></td>';
+            body += `<button type="submit" class="btn-delete" onclick="return confirm('Are you sure you want to delete this movie?')">Delete</button></form></td>`;
             body += '</tr>';
         });
         body += '</tbody></table>';

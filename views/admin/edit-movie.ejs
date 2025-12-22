@@ -13,13 +13,17 @@
     body += '<div class="poster-preview"><img src="' + movie.poster.replace(/"/g, '&quot;') + '" alt="Preview" id="posterPreview"></div></div>';
     body += '<div class="form-group"><label for="downloadLink">Download Link *</label>';
     body += '<input type="url" id="downloadLink" name="downloadLink" class="form-input" value="' + movie.downloadLink.replace(/"/g, '&quot;') + '" required></div>';
-    body += '<div class="form-group"><label for="category">Category *</label>';
-    body += '<select id="category" name="category" class="form-input" required>';
+    body += '<div class="form-group"><label for="categories">Categories *</label>';
+    body += '<div class="checkbox-group">';
     const categories = ['trending', 'bollywood', 'hollywood', 'marvel', 'dc', 'south'];
     categories.forEach(cat => {
-        body += '<option value="' + cat + '"' + (movie.category === cat ? ' selected' : '') + '>' + cat.charAt(0).toUpperCase() + cat.slice(1) + '</option>';
+        const isChecked = movie.categories && movie.categories.includes(cat);
+        body += '<label class="checkbox-label">';
+        body += '<input type="checkbox" name="categories" value="' + cat + '"' + (isChecked ? ' checked' : '') + '>';
+        body += '<span class="checkmark"></span>' + cat.charAt(0).toUpperCase() + cat.slice(1);
+        body += '</label>';
     });
-    body += '</select></div>';
+    body += '</div></div>';
     body += '<div class="form-group"><label for="rating">Rating (0-10)</label>';
     body += '<input type="number" id="rating" name="rating" class="form-input" value="' + (movie.rating || 0) + '" min="0" max="10" step="0.1"></div>';
     body += '<div class="form-actions">';
@@ -28,7 +32,8 @@
     body += '</form></div>';
     body += '<script>';
     body += 'document.getElementById("poster").addEventListener("input", function(e) {';
-    body += 'document.getElementById("posterPreview").src = e.target.value || "' + movie.poster.replace(/"/g, '\\"') + '";';
-    body += '});</script>';
+    body += 'document.getElementById("posterPreview").src = e.target.value || "' + movie.poster.replace(/"/g, '\\\\"') + '";';
+    body += '});';
+    body += '</script>';
 %>
 <%- include('layout', { body: body, page: 'edit' }) %>

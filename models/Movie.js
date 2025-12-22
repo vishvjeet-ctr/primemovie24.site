@@ -16,14 +16,14 @@ const movieSchema = new mongoose.Schema({
     required: [true, 'Download link is required'],
     trim: true
   },
-  category: {
+  categories: [{
     type: String,
     required: true,
     enum: {
       values: ['trending', 'bollywood', 'hollywood', 'marvel', 'dc', 'south'],
       message: 'Category must be one of: trending, bollywood, hollywood, marvel, dc, south'
     }
-  },
+  }],
   rating: {
     type: Number,
     min: 0,

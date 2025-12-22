@@ -64,14 +64,24 @@ router.get('/add', requireAuth, (req, res) => {
 // Create Movie
 router.post('/add', requireAuth, async (req, res) => {
   try {
-    const { title, poster, downloadLink, category, rating } = req.body;
+    const { title, poster, downloadLink, categories, rating } = req.body;
+    
+    // Handle categories - convert from form array to proper format
+    let selectedCategories = [];
+    if (categories) {
+      if (Array.isArray(categories)) {
+        selectedCategories = categories;
+      } else {
+        selectedCategories = [categories];
+      }
+    }
     
     // Validation
-    if (!title || !poster || !downloadLink || !category) {
+    if (!title || !poster || !downloadLink || selectedCategories.length === 0) {
       return res.status(400).render('admin/add-movie', {
         title: 'Add New Movie',
         page: 'add',
-        error: 'Please fill all required fields'
+        error: 'Please fill all required fields and select at least one category'
       });
     }
 
@@ -79,7 +89,7 @@ router.post('/add', requireAuth, async (req, res) => {
       title: title.trim(),
       poster: poster.trim(),
       downloadLink: downloadLink.trim(),
-      category: category.trim(),
+      categories: selectedCategories,
       rating: rating ? parseFloat(rating) : 0
     });
 
@@ -134,13 +144,23 @@ router.get('/movies/:id/edit', requireAuth, async (req, res) => {
 // Update Movie
 router.put('/movies/:id', requireAuth, async (req, res) => {
   try {
-    const { title, poster, downloadLink, category, rating } = req.body;
+    const { title, poster, downloadLink, categories, rating } = req.body;
+    
+    // Handle categories - convert from form array to proper format
+    let selectedCategories = [];
+    if (categories) {
+      if (Array.isArray(categories)) {
+        selectedCategories = categories;
+      } else {
+        selectedCategories = [categories];
+      }
+    }
     
     await Movie.findByIdAndUpdate(req.params.id, {
       title,
       poster,
       downloadLink,
-      category,
+      categories: selectedCategories,
       rating: rating || 0
     });
 

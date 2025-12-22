@@ -8,7 +8,9 @@
         <div class="movie-detail-info">
             <h1 class="detail-title"><%= movie.title %></h1>
             <div class="detail-meta">
-                <span class="detail-category"><%= movie.category.charAt(0).toUpperCase() + movie.category.slice(1) %></span>
+                <% if (movie.categories && movie.categories.length > 0) { %>
+                    <span class="detail-category"><%= movie.categories[0].charAt(0).toUpperCase() + movie.categories[0].slice(1) %></span>
+                <% } %>
                 <% if (movie.rating > 0) { %>
                     <span class="detail-rating">⭐ <%= movie.rating %>/10</span>
                 <% } %>

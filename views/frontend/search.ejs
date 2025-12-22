@@ -16,7 +16,9 @@
                             <img src="<%= movie.poster %>" alt="<%= movie.title %>" class="movie-poster">
                         </a>
                         <h3 class="movie-title-below"><%= movie.title %></h3>
-                        <div class="movie-category"><%= movie.category %></div>
+                        <% if (movie.categories && movie.categories.length > 0) { %>
+                            <div class="movie-category"><%= movie.categories[0] %></div>
+                        <% } %>
                     </div>
                 <% }); %>
             </div>
