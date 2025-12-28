@@ -1,39 +1,132 @@
 <% 
-    let body = '';
-    body += '<div class="form-header">';
-    body += '<h1>Edit Movie</h1>';
-    body += '<a href="/admin/movies" class="back-link">← Back to Movies</a>';
+let body = ''; 
+const movieCategories = Array.isArray(movie.categories) ? movie.categories : (movie.category ? [movie.category] : []);
+const allCategories = ['trending', 'bollywood', 'hollywood', 'marvel', 'dc', 'south', 'webseries', 'netflixprime', 'animation'];
+
+// Helper function to escape HTML
+function escapeHtml(text) {
+  if (!text) return '';
+  const map = {
+    '&': '&amp;',
+    '<': '&lt;',
+    '>': '&gt;',
+    '"': '&quot;',
+    "'": '&#039;'
+  };
+  return String(text).replace(/[&<>"']/g, m => map[m]);
+}
+
+const movieId = escapeHtml(String(movie._id));
+const movieTitle = escapeHtml(movie.title || '');
+const moviePoster = escapeHtml(movie.poster || '');
+const movieDownloadLink = escapeHtml(movie.downloadLink || '');
+const movieRating = movie.rating || 0;
+
+body += '<div class="form-header">'; 
+body += '<h1>Edit Movie</h1>'; 
+body += '<a href="/admin/movies" class="back-link">← Back to Movies</a>'; 
+body += '</div>'; 
+body += '<div class="form-container">'; 
+body += '<form action="/admin/movies/' + movieId + '?_method=PUT" method="POST" class="movie-form">'; 
+body += '<div class="form-group"><label for="title">Movie Title *</label>'; 
+body += '<input type="text" id="title" name="title" class="form-input" placeholder="Enter movie title" value="' + movieTitle + '" required></div>';
+body += '<div class="form-group"><label for="poster">Poster Image URL *</label>'; 
+body += '<input type="url" id="poster" name="poster" class="form-input" placeholder="https://example.com/poster.jpg" value="' + moviePoster + '" required>';
+body += '<div class="poster-preview" id="posterPreviewContainer" style="display: ' + (movie.poster ? 'block' : 'none') + '; margin-top: 1rem;">'; 
+body += '<img src="' + moviePoster + '" alt="Preview" id="posterPreview" style="max-width: 300px; border-radius: 8px;"></div></div>'; 
+body += '<div class="form-group"><label>Download Links *</label>'; 
+body += '<div id="downloadLinksContainer">';
+
+// Handle existing downloadLinks or legacy downloadLink
+let existingLinks = [];
+if (movie.downloadLinks && Array.isArray(movie.downloadLinks) && movie.downloadLinks.length > 0) {
+  existingLinks = movie.downloadLinks;
+} else if (movie.downloadLink) {
+  // Old movie with only downloadLink - show it as first item
+  existingLinks = [{ name: 'Download', url: movie.downloadLink }];
+}
+
+// Render existing links
+if (existingLinks.length > 0) {
+  existingLinks.forEach((link, index) => {
+    const linkName = escapeHtml(link.name || 'Download');
+    const linkUrl = escapeHtml(link.url || '');
+    body += '<div class="download-link-item" style="display: flex; gap: 0.5rem; margin-bottom: 0.5rem; align-items: flex-start;">'; 
+    body += '<div style="flex: 1;"><input type="text" name="linkNames" class="form-input" placeholder="Link Name (e.g., Server 1, 720p)" value="' + linkName + '" style="margin-bottom: 0.5rem;"></div>'; 
+    body += '<div style="flex: 2;"><input type="url" name="linkUrls" class="form-input" placeholder="https://example.com/download" value="' + linkUrl + '" required></div>'; 
+    body += '<button type="button" class="btn-remove-link" onclick="removeDownloadLink(this)" style="' + (existingLinks.length > 1 ? '' : 'display: none; ') + 'padding: 0.5rem 0.75rem; background: #dc3545; color: white; border: none; border-radius: 4px; cursor: pointer; align-self: flex-end;">Remove</button>'; 
     body += '</div>';
-    body += '<div class="form-container">';
-    body += '<form action="/admin/movies/' + movie._id + '?_method=PUT" method="POST" class="movie-form">';
-    body += '<div class="form-group"><label for="title">Movie Title *</label>';
-    body += '<input type="text" id="title" name="title" class="form-input" value="' + movie.title.replace(/"/g, '&quot;') + '" required></div>';
-    body += '<div class="form-group"><label for="poster">Poster Image URL *</label>';
-    body += '<input type="url" id="poster" name="poster" class="form-input" value="' + movie.poster.replace(/"/g, '&quot;') + '" required>';
-    body += '<div class="poster-preview"><img src="' + movie.poster.replace(/"/g, '&quot;') + '" alt="Preview" id="posterPreview"></div></div>';
-    body += '<div class="form-group"><label for="downloadLink">Download Link *</label>';
-    body += '<input type="url" id="downloadLink" name="downloadLink" class="form-input" value="' + movie.downloadLink.replace(/"/g, '&quot;') + '" required></div>';
-    body += '<div class="form-group"><label for="categories">Categories *</label>';
-    body += '<div class="checkbox-group">';
-    const categories = ['trending', 'bollywood', 'hollywood', 'marvel', 'dc', 'south'];
-    categories.forEach(cat => {
-        const isChecked = movie.categories && movie.categories.includes(cat);
-        body += '<label class="checkbox-label">';
-        body += '<input type="checkbox" name="categories" value="' + cat + '"' + (isChecked ? ' checked' : '') + '>';
-        body += '<span class="checkmark"></span>' + cat.charAt(0).toUpperCase() + cat.slice(1);
-        body += '</label>';
-    });
-    body += '</div></div>';
-    body += '<div class="form-group"><label for="rating">Rating (0-10)</label>';
-    body += '<input type="number" id="rating" name="rating" class="form-input" value="' + (movie.rating || 0) + '" min="0" max="10" step="0.1"></div>';
-    body += '<div class="form-actions">';
-    body += '<button type="submit" class="btn btn-primary">Update Movie</button>';
-    body += '<a href="/admin/movies" class="btn btn-secondary">Cancel</a></div>';
-    body += '</form></div>';
-    body += '<script>';
-    body += 'document.getElementById("poster").addEventListener("input", function(e) {';
-    body += 'document.getElementById("posterPreview").src = e.target.value || "' + movie.poster.replace(/"/g, '\\\\"') + '";';
-    body += '});';
-    body += '</script>';
+  });
+} else {
+  // No links - show one empty field
+  body += '<div class="download-link-item" style="display: flex; gap: 0.5rem; margin-bottom: 0.5rem; align-items: flex-start;">'; 
+  body += '<div style="flex: 1;"><input type="text" name="linkNames" class="form-input" placeholder="Link Name (e.g., Server 1, 720p)" style="margin-bottom: 0.5rem;"></div>'; 
+  body += '<div style="flex: 2;"><input type="url" name="linkUrls" class="form-input" placeholder="https://example.com/download" required></div>'; 
+  body += '<button type="button" class="btn-remove-link" onclick="removeDownloadLink(this)" style="display: none; padding: 0.5rem 0.75rem; background: #dc3545; color: white; border: none; border-radius: 4px; cursor: pointer; align-self: flex-end;">Remove</button>'; 
+  body += '</div>';
+}
+
+body += '</div>'; 
+body += '<button type="button" id="addDownloadLinkBtn" class="btn-secondary" style="margin-top: 0.5rem; padding: 0.5rem 1rem; background: #6c757d; color: white; border: none; border-radius: 4px; cursor: pointer;">+ Add Another Download Link</button>'; 
+body += '<input type="hidden" id="downloadLink" name="downloadLink" value="' + movieDownloadLink + '"></div>';
+body += '<div class="form-group"><label>Categories *</label>'; 
+body += '<div class="checkbox-group" style="display: flex; flex-direction: column; gap: 0.5rem;">'; 
+
+allCategories.forEach(cat => {
+  const isChecked = movieCategories.includes(cat) ? 'checked' : '';
+  const catLabels = {
+    'trending': 'Trending',
+    'bollywood': 'Bollywood',
+    'hollywood': 'Hollywood',
+    'marvel': 'Marvel',
+    'dc': 'DC',
+    'south': 'South Indian',
+    'webseries': 'Web Series',
+    'netflixprime': 'On Netflix & Prime',
+    'animation': 'Animation'
+  };
+  body += '<label style="display: flex; align-items: center; gap: 0.5rem; cursor: pointer;">'; 
+  body += '<input type="checkbox" name="categories" value="' + escapeHtml(cat) + '" ' + isChecked + ' style="margin-right: 0.5rem;">'; 
+  body += '<span>' + escapeHtml(catLabels[cat]) + '</span></label>';
+});
+
+body += '</div></div>'; 
+body += '<div class="form-group"><label for="rating">Rating (0-10)</label>'; 
+body += '<input type="number" id="rating" name="rating" class="form-input" placeholder="0" min="0" max="10" step="0.1" value="' + movieRating + '"></div>';
+body += '<div class="form-actions">'; 
+body += '<button type="submit" class="btn btn-primary">Update Movie</button>';
+body += '<a href="/admin/movies" class="btn btn-secondary">Cancel</a></div>'; 
+body += '</form></div>'; 
+body += '<script>'; 
+body += 'document.getElementById("poster").addEventListener("input", function (e) {'; 
+body += 'const preview = document.getElementById("posterPreview");'; 
+body += 'const container = document.getElementById("posterPreviewContainer");'; 
+body += 'if (e.target.value) { preview.src = e.target.value; container.style.display = "block"; }'; 
+body += 'else { container.style.display = "none"; }'; 
+body += '});'; 
+body += 'function addDownloadLink() {'; 
+body += 'const container = document.getElementById("downloadLinksContainer");'; 
+body += 'const newItem = document.createElement("div");'; 
+body += 'newItem.className = "download-link-item";'; 
+body += 'newItem.style.cssText = "display: flex; gap: 0.5rem; margin-bottom: 0.5rem; align-items: flex-start;";'; 
+body += 'newItem.innerHTML = "<div style=\\"flex: 1;\\"><input type=\\"text\\" name=\\"linkNames\\" class=\\"form-input\\" placeholder=\\"Link Name (e.g., Server 1, 720p)\\" style=\\"margin-bottom: 0.5rem;\\"></div><div style=\\"flex: 2;\\"><input type=\\"url\\" name=\\"linkUrls\\" class=\\"form-input\\" placeholder=\\"https://example.com/download\\" required></div><button type=\\"button\\" class=\\"btn-remove-link\\" onclick=\\"removeDownloadLink(this)\\" style=\\"padding: 0.5rem 0.75rem; background: #dc3545; color: white; border: none; border-radius: 4px; cursor: pointer; align-self: flex-end;\\">Remove</button>";'; 
+body += 'container.appendChild(newItem);'; 
+body += 'updateRemoveButtons();'; 
+body += '}'; 
+body += 'function removeDownloadLink(button) {'; 
+body += 'button.parentElement.remove();'; 
+body += 'updateRemoveButtons();'; 
+body += '}'; 
+body += 'function updateRemoveButtons() {'; 
+body += 'const items = document.querySelectorAll(".download-link-item");'; 
+body += 'const removeButtons = document.querySelectorAll(".btn-remove-link");'; 
+body += 'removeButtons.forEach(btn => {'; 
+body += 'btn.style.display = items.length > 1 ? "inline-block" : "none";'; 
+body += '});'; 
+body += '}'; 
+body += 'document.getElementById("addDownloadLinkBtn").addEventListener("click", addDownloadLink);'; 
+body += 'updateRemoveButtons();'; 
+body += '</script>'; 
 %>
-<%- include('layout', { body: body, page: 'edit' }) %>
+<%- include('layout', { body: body, page: 'edit', title: typeof title !== 'undefined' ? title : 'Edit Movie' }) %>
+

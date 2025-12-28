@@ -21,7 +21,7 @@
                         <input 
                             type="text" 
                             name="search" 
-                            placeholder="Search movies..." 
+                            placeholder="Search Correct Movie Name..." 
                             class="search-input"
                             id="searchInput"
                             value="<%= typeof searchQuery !== 'undefined' ? searchQuery : '' %>"
@@ -32,11 +32,51 @@
                     <button type="submit" class="search-btn">Search</button>
                 </form>
             </div>
+            <div class="header-buttons">
+                <div class="telegram-container">
+                    <!-- CONFIGURABLE: Update the href below with your Telegram channel/group link -->
+                    <a href="https://t.me/your_telegram_channel" target="_blank" class="telegram-btn" id="telegramBtn">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" style="margin-right: 0.5rem;">
+                            <path d="M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0zm5.562 8.161c-.169 1.858-.896 6.728-.896 6.728-.517 2.186-1.896 2.586-1.896 2.586-.896.345-1.517-.345-1.517-.345l-3.448-2.242c-.896-.586-1.517-.345-1.517-.345l-2.242 1.517c-.345.345-.896.345-.896.345l-.345-.345c-.345-.345-.345-.896-.345-.896l1.517-2.242c.345-.517.345-1.517.345-1.517l-2.242-3.448c-.345-.896.345-1.517.345-1.517.896-.345 2.586-1.896 2.586-1.896 1.858-.896 6.728-.896 6.728-.896 1.517-.345 2.586.896 2.586.896.896.896 1.517 2.586 1.517 2.586z"/>
+                        </svg>
+                        <span class="telegram-text">Join Telegram</span>
+                    </a>
+                </div>
+                <div  class="suggest-container">
+                    <a href="#suggestion" class="suggest-btn" id="suggestBtn">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" style="margin-right: 0.5rem;">
+                            <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm5 11h-4v4h-2v-4H7v-2h4V7h2v4h4v2z"/>
+                        </svg>
+                        <span class="suggest-text">Suggest Movie</span>
+                    </a>
+                </div>
+            </div>
         </div>
     </header>
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {
+            // Navbar hide/show on scroll for mobile
+            let lastScrollTop = 0;
+            const mainHeader = document.querySelector('.main-header');
+            
+            window.addEventListener('scroll', function() {
+                if (window.innerWidth <= 768) {
+                    const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+                    
+                    if (scrollTop > lastScrollTop && scrollTop > 100) {
+                        // Scrolling down
+                        mainHeader.style.transform = 'translateY(-100%)';
+                    } else {
+                        // Scrolling up
+                        mainHeader.style.transform = 'translateY(0)';
+                    }
+                    
+                    lastScrollTop = scrollTop <= 0 ? 0 : scrollTop;
+                }
+            });
+            
+            // Search functionality
             const searchInput = document.getElementById('searchInput');
             const searchResults = document.getElementById('searchResults');
             let searchTimeout;

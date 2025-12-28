@@ -1,30 +1,40 @@
 <%- include('../partials/header') %>
 
-<main class="main-content">
-    <div class="movie-detail-container">
-        <div class="movie-detail-poster">
-            <img src="<%= movie.poster %>" alt="<%= movie.title %>" class="detail-poster-img">
-        </div>
-        <div class="movie-detail-info">
-            <h1 class="detail-title"><%= movie.title %></h1>
-            <div class="detail-meta">
-                <% if (movie.categories && movie.categories.length > 0) { %>
-                    <span class="detail-category"><%= movie.categories[0].charAt(0).toUpperCase() + movie.categories[0].slice(1) %></span>
-                <% } %>
-                <% if (movie.rating > 0) { %>
-                    <span class="detail-rating">⭐ <%= movie.rating %>/10</span>
-                <% } %>
+    <main class="main-content">
+        <div class="movie-detail-container">
+            <div class="movie-detail-poster">
+                <img src="<%= movie.poster %>" alt="<%= movie.title %>" class="detail-poster-img">
             </div>
-            <div class="detail-actions">
-                <a href="<%= movie.downloadLink %>" target="_blank" class="download-btn">
-                    Download Movie
-                </a>
-                <a href="/" class="back-btn">Back to Home</a>
+            <div class="movie-detail-info">
+                <h1 class="detail-title">
+                    <%= movie.title %>
+                </h1>
+                <div class="detail-meta">
+                    <% if (movie.categories && movie.categories.length> 0) { %>
+                        <span class="detail-category">
+                            <%= movie.categories[0].charAt(0).toUpperCase() + movie.categories[0].slice(1) %>
+                        </span>
+                        <% } %>
+                            <% if (movie.rating> 0) { %>
+                                <span class="detail-rating">⭐ <%= movie.rating %>/10</span>
+                                <% } %>
+                </div>
+                <div class="detail-actions">
+                    <% if (movie.downloadLinks && Array.isArray(movie.downloadLinks) && movie.downloadLinks.length > 0) { %>
+                        <% movie.downloadLinks.forEach((link, index) => { %>
+                            <a href="<%= link.url %>" target="_blank" class="download-btn" style="margin-bottom: 0.5rem; display: inline-block;">
+                                <%= link.name || 'Download' %> <%= index > 0 ? (index + 1) : '' %>
+                            </a>
+                        <% }); %>
+                    <% } else if (movie.downloadLink) { %>
+                        <a href="<%= movie.downloadLink %>" target="_blank" class="download-btn">
+                            Download Movie
+                        </a>
+                    <% } %>
+                    <a href="/" class="back-btn" style="display: block; margin-top: 1rem;">Back to Home</a>
+                </div>
             </div>
         </div>
-    </div>
-</main>
+    </main>
 
-<%- include('../partials/footer') %>
-
-
+    <%- include('../partials/footer') %>

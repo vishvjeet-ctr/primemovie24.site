@@ -457,6 +457,32 @@ body {
     box-shadow: 0 4px 12px rgba(99, 102, 241, 0.4);
 }
 
+.search-container {
+    margin-bottom: 1.5rem;
+}
+
+.search-input {
+    width: 100%;
+    padding: 0.875rem 1.25rem;
+    background: var(--admin-card);
+    border: 2px solid var(--admin-border);
+    border-radius: 10px;
+    color: var(--admin-text);
+    font-size: 1rem;
+    transition: all 0.3s ease;
+}
+
+.search-input:focus {
+    outline: none;
+    border-color: var(--admin-primary);
+    box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.1);
+}
+
+.search-input::placeholder {
+    color: var(--admin-text-secondary);
+}
+
+
 .table-container {
     background: var(--admin-card);
     border: 1px solid var(--admin-border);
@@ -751,5 +777,3 @@ body {
         padding: 1rem;
     }
 }
-
-

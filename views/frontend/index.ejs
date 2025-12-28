@@ -25,6 +25,44 @@
         </div>
     </section>
 
+    <!-- On Netflix & Prime Section -->
+    <section class="movie-section">
+        <h2 class="section-title">On Netflix & Prime</h2>
+        <div class="movies-grid" data-category="netflixprime">
+            <% if (netflixprimeMovies.length > 0) { %>
+                <% netflixprimeMovies.forEach(movie => { %>
+                    <div class="movie-card">
+                        <a href="/movie/<%= movie._id %>" class="movie-link">
+                            <img src="<%= movie.poster %>" alt="<%= movie.title %>" class="movie-poster">
+                        </a>
+                        <h3 class="movie-title-below"><%= movie.title %></h3>
+                    </div>
+                <% }); %>
+            <% } else { %>
+                <p class="no-movies">No movies available on Netflix & Prime</p>
+            <% } %>
+        </div>
+    </section>
+
+    <!-- Web Series Section -->
+    <section class="movie-section">
+        <h2 class="section-title">Web Series</h2>
+        <div class="movies-grid" data-category="webseries">
+            <% if (webseriesMovies.length > 0) { %>
+                <% webseriesMovies.forEach(movie => { %>
+                    <div class="movie-card">
+                        <a href="/movie/<%= movie._id %>" class="movie-link">
+                            <img src="<%= movie.poster %>" alt="<%= movie.title %>" class="movie-poster">
+                        </a>
+                        <h3 class="movie-title-below"><%= movie.title %></h3>
+                    </div>
+                <% }); %>
+            <% } else { %>
+                <p class="no-movies">No Web Series available</p>
+            <% } %>
+        </div>
+    </section>
+
     <!-- Bollywood Movies Section -->
     <section class="movie-section">
         <h2 class="section-title">Bollywood Movies</h2>
@@ -59,6 +97,25 @@
                 <% }); %>
             <% } else { %>
                 <p class="no-movies">No Hollywood movies available</p>
+            <% } %>
+        </div>
+    </section>
+
+    <!-- Animation Movies Section -->
+    <section class="movie-section">
+        <h2 class="section-title">Animation Movies</h2>
+        <div class="movies-grid" data-category="animation">
+            <% if (animationMovies.length > 0) { %>
+                <% animationMovies.forEach(movie => { %>
+                    <div class="movie-card">
+                        <a href="/movie/<%= movie._id %>" class="movie-link">
+                            <img src="<%= movie.poster %>" alt="<%= movie.title %>" class="movie-poster">
+                        </a>
+                        <h3 class="movie-title-below"><%= movie.title %></h3>
+                    </div>
+                <% }); %>
+            <% } else { %>
+                <p class="no-movies">No Animation movies available</p>
             <% } %>
         </div>
     </section>
@@ -119,8 +176,119 @@
             <% } %>
         </div>
     </section>
+
+    <!-- Movie Suggestion Section -->
+    <section class="suggestion-section" id="suggestion">
+        <div class="suggestion-container">
+            <h2 class="suggestion-title">Suggest a Movie</h2>
+            <p class="suggestion-subtitle">Have a movie in mind? Let us know and we'll add it!</p>
+            <form id="suggestionForm" class="suggestion-form">
+                <div class="form-group">
+                    <label for="movieName">Movie Name *</label>
+                    <input 
+                        type="text" 
+                        id="movieName" 
+                        name="movieName" 
+                        class="form-input" 
+                        placeholder="Enter movie name" 
+                        required
+                    >
+                </div>
+                <div class="form-group">
+                    <label for="suggestionMessage">Message (Optional)</label>
+                    <textarea 
+                        id="suggestionMessage" 
+                        name="suggestionMessage" 
+                        class="form-textarea" 
+                        placeholder="Any additional details or comments..."
+                        rows="4"
+                    ></textarea>
+                </div>
+                <button type="submit" class="submit-btn" id="submitBtn">
+                    <span id="submitText">Submit Suggestion</span>
+                    <span id="submitLoader" style="display: none;">Sending...</span>
+                </button>
+                <div id="suggestionStatusMessage" class="suggestion-message" style="display: none;"></div>
+            </form>
+        </div>
+    </section>
 </main>
 
+
 <%- include('../partials/footer') %>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const form = document.getElementById('suggestionForm');
+    const submitBtn = document.getElementById('submitBtn');
+    const submitText = document.getElementById('submitText');
+    const submitLoader = document.getElementById('submitLoader');
+    const messageDiv = document.getElementById('suggestionStatusMessage');
+    
+    form.addEventListener('submit', async function(e) {
+        e.preventDefault();
+        
+        const movieName = document.getElementById('movieName').value.trim();
+        const suggestionMessage = document.getElementById('suggestionMessage').value.trim();
+        
+        if (!movieName) {
+            showMessage('Please enter a movie name', 'error');
+            return;
+        }
+        
+        // Disable form and show loading
+        submitBtn.disabled = true;
+        submitText.style.display = 'none';
+        submitLoader.style.display = 'inline';
+        messageDiv.style.display = 'none';
+        
+        try {
+            const response = await fetch('/suggestion', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    movie: movieName,
+                    suggestion: suggestionMessage || ''
+                })
+            });
+            
+            const data = await response.json();
+            
+            if (response.ok && data.success) {
+                showMessage('Thank you! Your suggestion has been sent successfully.', 'success');
+                form.reset();
+            } else {
+                showMessage(data.error || 'Failed to send suggestion. Please try again.', 'error');
+            }
+        } catch (error) {
+            console.error('Error:', error);
+            showMessage('An error occurred. Please try again later.', 'error');
+        } finally {
+            // Re-enable form
+            submitBtn.disabled = false;
+            submitText.style.display = 'inline';
+            submitLoader.style.display = 'none';
+        }
+    });
+    
+    function showMessage(text, type) {
+        messageDiv.textContent = text;
+        messageDiv.className = 'suggestion-message ' + type;
+        messageDiv.style.display = 'block';
+        
+        // Scroll to message
+        messageDiv.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        
+        // Auto-hide success message after 5 seconds
+        if (type === 'success') {
+            setTimeout(() => {
+                messageDiv.style.display = 'none';
+            }, 5000);
+        }
+    }
+});
+</script>
 
 

@@ -56,7 +56,7 @@ router.get('/', async (req, res) => {
       .sort({ createdAt: -1 })
       .limit(10);
 
-    // Get movies by category (15 each)
+    // Get movies by category (45 each)
     const bollywoodMovies = await Movie.find({ 
       $or: [
         { categories: 'bollywood' },
@@ -64,7 +64,7 @@ router.get('/', async (req, res) => {
       ]
     })
       .sort({ createdAt: -1 })
-      .limit(15);
+      .limit(45);
     
     const hollywoodMovies = await Movie.find({ 
       $or: [
@@ -73,7 +73,7 @@ router.get('/', async (req, res) => {
       ]
     })
       .sort({ createdAt: -1 })
-      .limit(15);
+      .limit(45);
     
     const marvelMovies = await Movie.find({ 
       $or: [
@@ -82,7 +82,7 @@ router.get('/', async (req, res) => {
       ]
     })
       .sort({ createdAt: -1 })
-      .limit(15);
+      .limit(45);
     
     const dcMovies = await Movie.find({ 
       $or: [
@@ -91,7 +91,7 @@ router.get('/', async (req, res) => {
       ]
     })
       .sort({ createdAt: -1 })
-      .limit(15);
+      .limit(45);
     
     const southMovies = await Movie.find({ 
       $or: [
@@ -100,7 +100,34 @@ router.get('/', async (req, res) => {
       ]
     })
       .sort({ createdAt: -1 })
-      .limit(15);
+      .limit(45);
+    
+    const webseriesMovies = await Movie.find({ 
+      $or: [
+        { categories: 'webseries' },
+        { category: 'webseries' }
+      ]
+    })
+      .sort({ createdAt: -1 })
+      .limit(45);
+    
+    const netflixprimeMovies = await Movie.find({ 
+      $or: [
+        { categories: 'netflixprime' },
+        { category: 'netflixprime' }
+      ]
+    })
+      .sort({ createdAt: -1 })
+      .limit(45);
+    
+    const animationMovies = await Movie.find({ 
+      $or: [
+        { categories: 'animation' },
+        { category: 'animation' }
+      ]
+    })
+      .sort({ createdAt: -1 })
+      .limit(45);
 
     res.render('frontend/index', {
       trendingMovies,
@@ -109,6 +136,9 @@ router.get('/', async (req, res) => {
       marvelMovies,
       dcMovies,
       southMovies,
+      webseriesMovies,
+      netflixprimeMovies,
+      animationMovies,
       title: 'PrimeMovie24 - Home'
     });
   } catch (error) {
@@ -135,6 +165,9 @@ router.get('/movie/:id', async (req, res) => {
     res.status(500).render('error', { error: 'Failed to load movie details' });
   }
 });
+
+
+
 
 module.exports = router;
 

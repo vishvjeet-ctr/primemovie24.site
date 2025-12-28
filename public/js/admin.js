@@ -15,4 +15,25 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         });
     }
+
+    // Movie Search Functionality
+    const movieSearch = document.getElementById('movieSearch');
+    if (movieSearch) {
+        movieSearch.addEventListener('input', function() {
+            const searchTerm = this.value.toLowerCase().trim();
+            const movieRows = document.querySelectorAll('.movies-table tbody tr');
+            
+            movieRows.forEach(function(row) {
+                const titleCell = row.querySelector('.title-cell');
+                if (titleCell) {
+                    const title = titleCell.textContent.toLowerCase();
+                    if (title.includes(searchTerm)) {
+                        row.style.display = '';
+                    } else {
+                        row.style.display = 'none';
+                    }
+                }
+            });
+        });
+    }
 });

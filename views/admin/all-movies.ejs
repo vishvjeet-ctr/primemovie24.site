@@ -1,8 +1,11 @@
-<% 
+<%
     let body = '';
     body += '<div class="table-header">';
     body += '<h1>All Movies</h1>';
     body += '<a href="/admin/add" class="add-btn">+ Add New Movie</a>';
+    body += '</div>';
+    body += '<div class="search-container">';
+    body += '<input type="text" id="movieSearch" class="search-input" placeholder="🔍 Search movies by title...">';
     body += '</div>';
     body += '<div class="table-container">';
     if (movies.length > 0) {
@@ -37,4 +40,4 @@
     }
     body += '</div>';
 %>
-<%- include('layout', { body: body, page: 'movies' }) %>
+    <%- include('layout', { body: body, page: 'movies' }) %>
