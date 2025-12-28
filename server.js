@@ -24,8 +24,8 @@ const transporter = nodemailer.createTransport({
   port: 587,
   secure: false, // Use true for port 465, false for port 587
   auth: {
-    user: "vk92636312@gmail.com",
-    pass: "mbeq vbyl mvwz pdnw", // Gmail App Password (not regular password)
+    user: process.env.ADMIN_EMAIL,
+    pass: process.env.EMAIL_PASS, // Gmail App Password (not regular password)
   },
 });
 
@@ -69,12 +69,12 @@ const SendEmail = async (movie, suggestion, userIP, timestamp) => {
 
     const info = await transporter.sendMail({
       from: '"PrimeMovie24" <vk92636312@gmail.com>',
-      to: "vk92636312@gmail.com",
+      to: process.env.ADMIN_EMAIL,
       subject: `🎬 Movie Suggestion: ${movie || 'New Movie'}`,
       text: textBody,
       html: htmlBody,
     });
-
+  
     console.log("✅ Suggestion email sent: %s", info.messageId);
     if (nodemailer.getTestMessageUrl) {
       console.log("Preview URL: %s", nodemailer.getTestMessageUrl(info));
