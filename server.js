@@ -24,7 +24,7 @@ const transporter = nodemailer.createTransport({
   port: 587,
   secure: false, // Use true for port 465, false for port 587
   auth: {
-    user: process.env.ADMIN_EMAIL,
+    user: "vk92636312@gmail.com",
     pass: process.env.EMAIL_PASS, // Gmail App Password (not regular password)
   },
 });
@@ -37,7 +37,7 @@ const SendEmail = async (movie, suggestion, userIP, timestamp) => {
       `Submitted At: ${timestamp}\n` +
       `User IP: ${userIP}\n\n` +
       `---\nThis is an automated message from PrimeMovie24 website.`;
-
+ 
     const htmlBody = `
       <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; background-color: #f5f5f5;">
         <div style="background-color: #ffffff; padding: 30px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
@@ -74,7 +74,7 @@ const SendEmail = async (movie, suggestion, userIP, timestamp) => {
       text: textBody,
       html: htmlBody,
     });
-  
+   
     console.log("✅ Suggestion email sent: %s", info.messageId);
     if (nodemailer.getTestMessageUrl) {
       console.log("Preview URL: %s", nodemailer.getTestMessageUrl(info));
@@ -85,9 +85,9 @@ const SendEmail = async (movie, suggestion, userIP, timestamp) => {
   }
 }
  
+  
 
-
- 
+  
 
 // Middleware
 app.set('view engine', 'ejs');

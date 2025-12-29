@@ -307,6 +307,7 @@ body {
     pointer-events: none;
     font-family: 'Arial Black', sans-serif;
     padding-top: 0;
+    -webkit-text-stroke: 2px rgba(255, 255, 255, 0.8);
 }
 
 .trending-movie-link {
